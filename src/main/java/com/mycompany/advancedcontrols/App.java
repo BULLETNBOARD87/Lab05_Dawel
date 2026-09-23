@@ -1,72 +1,95 @@
 package com.mycompany.advancedcontrols;
 
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.geometry.VPos;
+import javafx.event.ActionEvent;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-
-/**
- * JavaFX App
- */
 public class App extends Application {
-
+    
     @Override
     public void start(Stage stage) {
-        GridPane aPane = new GridPane();
-        TextField newItemField = new TextField();
-        aPane.add(newItemField,0,0);
-        Button addButton = new Button("Add");
-        aPane.add(addButton,1,0);
-        ListView<String> fruitList = new ListView<>();
-        aPane.add(fruitList,0,1);
-        Button removeButton = new Button("Remove");
-        aPane.add(removeButton,1,1);
+        TextField textField = new TextField();
+        ListView listView = new ListView();
+        Button addButton = new Button("Add Item");
+        Button removeButton = new Button("Remove Selected Item");
+        Button removeAllButton = new Button("Remove All Items");
+        Label counterLabel = new Label("Total items = 0");
+           
+        textField.setPrefSize(100, 30);
+        addButton.setPrefSize(100, 30);
         
-        GridPane.setValignment(removeButton, VPos.TOP);
+        removeButton.setPrefSize(220, 30);
+        removeAllButton.setPrefSize(220, 30);
         
-        GridPane.setValignment(removeButton, VPos.TOP);
-        addButton.setMinHeight(30);
-        addButton.setMinWidth(100);
-        removeButton.setMinHeight(30);
-        removeButton.setMinWidth(100);
-        newItemField.setMinHeight(30);
+        listView.setPrefSize(120, 130);
+        counterLabel.setPrefSize(120, 30);
+        
+        textField.setTranslateX(20);
+        textField.setTranslateY(50);
+        
+        addButton.setTranslateX(140);
+        addButton.setTranslateY(50);
+        
+        removeButton.setTranslateX(20);
+        removeButton.setTranslateY(100);
+        
+        removeAllButton.setTranslateX(20);
+        removeAllButton.setTranslateY(150);
+        
+        listView.setTranslateX(260);
+        listView.setTranslateY(50);
+        counterLabel.setTranslateX(20);
+        counterLabel.setTranslateY(200);
+        
+        Group root = new Group();
+        root.getChildren().add(textField);
+        root.getChildren().add(addButton);
+        root.getChildren().add(removeButton);
+        root.getChildren().add(removeAllButton);
+        root.getChildren().add(listView);
+        root.getChildren().add(counterLabel);
+        
+        addButton.setOnAction((ActionEvent e) -> {
+           String text = textField.getText();
+           int counting = listView.getItems().size();
+           
+           if (text.isEmpty() || text.isBlank()) {
+             System.out.println("Invalid!");
+           } else {
+             counting++;
+             listView.getItems().add(text);
+             textField.setText("");
+             counterLabel.setText("Total Items = " + counting);
+           }
+          
+        });
+        
+        removeButton.setOnAction((ActionEvent e) -> {
+            int selectedIndex = listView.getSelectionModel().getSelectedIndex();
+            listView.getItems().remove(selectedIndex);
+            int counting = listView.getItems().size();
+            counterLabel.setText("Total Items = " + counting);
+        });
 
-        fruitList.setPrefWidth(Integer.MAX_VALUE);
-        fruitList.setPrefHeight(Integer.MAX_VALUE); 
-
-        GridPane.setMargin(newItemField, new Insets(0, 0, 10, 0));
-        GridPane.setMargin(addButton, new Insets(0, 0, 10, 10));
-        GridPane.setMargin(removeButton, new Insets(0, 0, 0, 10));
-        
-        String[] fruits = {"Apples", "Oranges", "Bananas"};
-        fruitList.setItems(FXCollections.observableArrayList(fruits));
-        
-        
-        
         
         
 
-        Scene scene = new Scene(aPane, 400, 300);
+        Scene scene = new Scene(root, 400, 250);
+        stage.setTitle("JavaFX listView");
         stage.setScene(scene);
         stage.show();
     }
-
+    
+    
+    
+    
     public static void main(String[] args) {
         launch();
-    }
-
+    } 
 }
